@@ -69,5 +69,6 @@ def inspect_samples(samples, n=3, max_chars=400):
 
 
 if __name__ == "__main__":
-    data = load_dataset("C:\Users\Asus\paper-structured-summarizer\arxiv_data.csv", max_samples=5)
+    data = load_dataset("data/raw/arxiv_data.csv", max_samples=5)
     inspect_samples(data, n=3)
+
