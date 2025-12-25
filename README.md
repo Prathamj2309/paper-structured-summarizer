@@ -8,3 +8,19 @@ This project builds a transformer-based NLP system to generate structured summar
 
 
 
+\## Project Goals
+
+\- Study transformer behavior on long-form scientific text
+
+\- Generate structured summaries instead of free-form text
+
+\- Analyze failure modes such as hallucination and repetition
+
+
+
+\## Status
+
+Initial setup complete
+
+
+
