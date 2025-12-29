@@ -1,26 +1,10 @@
-"""
-Dataset loader for contribution extraction from scientific abstracts.
+import csv	
 
-Task:
-Input  : abstract / summary text
-Target : paper title (proxy for contribution)
-"""
-
-import csv
-
+print("DATASET.PY IS RUNNING")
 
 def load_dataset(path, max_samples=100):
     """
     Load abstract-title pairs from a CSV file.
-
-    Args:
-        path (str): path to CSV file
-        max_samples (int): maximum number of samples to load
-
-    Returns:
-        list of dicts with keys:
-            - article: abstract text
-            - target: title text
     """
     samples = []
 
@@ -28,19 +12,23 @@ def load_dataset(path, max_samples=100):
         reader = csv.DictReader(f)
 
         # Safety check: expected columns
-        required_cols = {"article", "title"}
+        required_cols = {"summaries", "titles"}
         if not required_cols.issubset(reader.fieldnames):
             raise ValueError(
                 f"CSV must contain columns {required_cols}, "
                 f"found {reader.fieldnames}"
             )
 
-        for i, row in enumerate(reader):
-            if i >= max_samples:
+        count = 0
+        for row in reader:
+            print("RAW ROW:", row)  # DEBUG
+
+            if count >= max_samples:
                 break
 
-            article = row["article"].strip()
-            title = row["title"].strip()
+            article = row["summaries"].strip()
+            title = row["titles"].strip()
+            terms = row.get("terms", "").strip()
 
             # Skip empty rows
             if not article or not title:
@@ -50,11 +38,14 @@ def load_dataset(path, max_samples=100):
                 {
                     "article": article,
                     "target": title,
+                    "terms": terms,
                 }
             )
 
-    return samples
+            count += 1
 
+    print(f"Loaded {len(samples)} samples")
+    return samples
 
 def inspect_samples(samples, n=3, max_chars=400):
     """
@@ -66,7 +57,6 @@ def inspect_samples(samples, n=3, max_chars=400):
         print(samples[i]["article"][:max_chars] + "...")
         print("\nTITLE:")
         print(samples[i]["target"])
-
 
 if __name__ == "__main__":
     data = load_dataset("data/raw/arxiv_data.csv", max_samples=5)
