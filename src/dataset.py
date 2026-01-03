@@ -1,64 +1,61 @@
-import csv	
+# src/dataset.py
+import pandas as pd
+from datasets import Dataset
+from transformers import T5Tokenizer
 
-print("DATASET.PY IS RUNNING")
+MODEL_NAME = "t5-small"
 
-def load_dataset(path, max_samples=100):
+
+def load_dataset(csv_path="data/raw/arxiv_data.csv", sample_size=None):
     """
-    Load abstract-title pairs from a CSV file.
+    Load and prepare dataset for title generation.
+
+    Returns a Hugging Face Dataset with:
+    - input_text
+    - target_text
     """
-    samples = []
+    df = pd.read_csv(csv_path)
 
-    with open(path, encoding="utf-8") as f:
-        reader = csv.DictReader(f)
+    required_cols = {"summaries", "titles"}
+    if not required_cols.issubset(df.columns):
+        raise ValueError(
+            f"CSV must contain columns {required_cols}, found {df.columns}"
+        )
 
-        # Safety check: expected columns
-        required_cols = {"summaries", "titles"}
-        if not required_cols.issubset(reader.fieldnames):
-            raise ValueError(
-                f"CSV must contain columns {required_cols}, "
-                f"found {reader.fieldnames}"
-            )
+    df = df[["summaries", "titles"]].dropna()
 
-        count = 0
-        for row in reader:
-            print("RAW ROW:", row)  # DEBUG
+    df["input_text"] = "title generation: " + df["summaries"]
+    df["target_text"] = df["titles"]
 
-            if count >= max_samples:
-                break
+    df = df[["input_text", "target_text"]]
 
-            article = row["summaries"].strip()
-            title = row["titles"].strip()
-            terms = row.get("terms", "").strip()
+    if sample_size is not None:
+        df = df.sample(n=sample_size, random_state=42)
 
-            # Skip empty rows
-            if not article or not title:
-                continue
+    return Dataset.from_pandas(df)
 
-            samples.append(
-                {
-                    "article": article,
-                    "target": title,
-                    "terms": terms,
-                }
-            )
 
-            count += 1
+def tokenize_dataset(dataset, max_input_len=512, max_target_len=64):
+    tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
 
-    print(f"Loaded {len(samples)} samples")
-    return samples
+    def tokenize(batch):
+        inputs = tokenizer(
+            batch["input_text"],
+            truncation=True,
+            padding="max_length",
+            max_length=max_input_len
+        )
+        targets = tokenizer(
+            batch["target_text"],
+            truncation=True,
+            padding="max_length",
+            max_length=max_target_len
+        )
+        inputs["labels"] = targets["input_ids"]
+        return inputs
 
-def inspect_samples(samples, n=3, max_chars=400):
-    """
-    Print a few samples to verify abstract-title alignment.
-    """
-    for i in range(min(n, len(samples))):
-        print(f"\n--- SAMPLE {i+1} ---")
-        print("ABSTRACT:")
-        print(samples[i]["article"][:max_chars] + "...")
-        print("\nTITLE:")
-        print(samples[i]["target"])
-
-if __name__ == "__main__":
-    data = load_dataset("data/raw/arxiv_data.csv", max_samples=5)
-    inspect_samples(data, n=3)
-
+    return dataset.map(
+        tokenize,
+        batched=True,
+        remove_columns=dataset.column_names
+    )
