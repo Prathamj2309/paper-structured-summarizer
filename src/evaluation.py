@@ -6,10 +6,10 @@ import evaluate
 
 from dataset import load_dataset
 
-MODEL_PATH = "result/model"
+MODEL_PATH = "result/model_with_terms"
 MODEL_NAME = "t5-small"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-OUTPUT_PATH = "results/metrics_baseline.json"
+OUTPUT_PATH = "results/metrics_with_terms.json"
 
 
 def main():

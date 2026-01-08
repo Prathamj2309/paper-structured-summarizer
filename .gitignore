@@ -9,6 +9,7 @@ env/
 
 # Model artifacts
 result/model/
+result/model_with_terms/
 
 # Notebooks
 .ipynb_checkpoints/
@@ -16,3 +17,7 @@ result/model/
 # OS
 .DS_Store
 Thumbs.db
+
+*.bin
+*.pt
+*.safetensors

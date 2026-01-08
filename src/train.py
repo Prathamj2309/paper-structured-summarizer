@@ -12,7 +12,7 @@ def main():
     print("Loading dataset...")
     dataset = load_dataset(
         csv_path="data/raw/arxiv_data.csv",
-        sample_size=500  # small baseline
+        sample_size=500  
     )
 
     print("Tokenizing dataset...")
@@ -51,8 +51,8 @@ def main():
         print(f"Epoch {epoch+1} | Avg loss: {avg_loss:.4f}")
 
     print("Saving model...")
-    model.save_pretrained("result/model")
-    print("Model saved to result/model")
+    model.save_pretrained("result/model_with_terms")
+    print("Model saved to result/model_with_terms")
 
 
 if __name__ == "__main__":
