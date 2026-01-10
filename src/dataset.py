@@ -4,7 +4,7 @@ from datasets import Dataset
 from sklearn.model_selection import train_test_split
 from transformers import T5Tokenizer
 
-MODEL_NAME = "t5-small"
+MODEL_NAME = "t5-base"
 
 
 def load_dataset(

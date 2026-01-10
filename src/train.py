@@ -4,7 +4,7 @@ from transformers import T5ForConditionalGeneration
 
 from dataset import load_dataset, tokenize_dataset
 
-MODEL_NAME = "t5-small"
+MODEL_NAME = "t5-base"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 
@@ -22,13 +22,13 @@ def main():
 
     train_loader = DataLoader(
         tokenized,
-        batch_size=8,
+        batch_size=2,
         shuffle=True
     )
 
     print("Loading model...")
     model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME).to(DEVICE)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5)
 
     print("Starting training...")
     model.train()
@@ -52,8 +52,8 @@ def main():
         print(f"Epoch {epoch+1} | Avg loss: {avg_loss:.4f}")
 
     print("Saving model...")
-    model.save_pretrained("result/model_with_terms_split")
-    print("Model saved to result/model_with_terms_split")
+    model.save_pretrained("result/model_with_terms_split_t5_base")
+    print("Model saved to result/model_with_terms_split_t5_base")
 
 
 if __name__ == "__main__":
