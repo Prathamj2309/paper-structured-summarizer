@@ -5,10 +5,10 @@ import evaluate
 
 from dataset import load_dataset
 
-MODEL_PATH = "result/model_with_terms_gpu"
+MODEL_PATH = "result/model_with_terms_split"
 MODEL_NAME = "t5-small"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-OUTPUT_PATH = "results/metrics_with_terms_gpu.json"
+OUTPUT_PATH = "results/metrics_with_terms_split.json"
 
 
 def main():
@@ -16,7 +16,7 @@ def main():
 
     _, test_dataset = load_dataset(
         csv_path="data/raw/arxiv_data.csv",
-        sample_size=2000,   # sample from full dataset
+        sample_size=2000,   
         test_size=0.1
     )
 
