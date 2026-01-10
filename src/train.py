@@ -10,24 +10,24 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 
 def main():
     print("Loading dataset...")
-    dataset = load_dataset(
+    train_dataset, _ = load_dataset(
         csv_path="data/raw/arxiv_data.csv",
-        sample_size=500  
+        sample_size=10000  
     )
 
     print("Tokenizing dataset...")
-    tokenized = tokenize_dataset(dataset)
+    tokenized = tokenize_dataset(train_dataset)
     tokenized.set_format("torch")
 
     train_loader = DataLoader(
         tokenized,
-        batch_size=4,
+        batch_size=8,
         shuffle=True
     )
 
     print("Loading model...")
     model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME).to(DEVICE)
-    optimizer = torch.optim.AdamW(model.parameters(), lr=2e-4)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=1e-4)
 
     print("Starting training...")
     model.train()
@@ -51,8 +51,8 @@ def main():
         print(f"Epoch {epoch+1} | Avg loss: {avg_loss:.4f}")
 
     print("Saving model...")
-    model.save_pretrained("result/model_with_terms")
-    print("Model saved to result/model_with_terms")
+    model.save_pretrained("result/model_with_terms_gpu")
+    print("Model saved to result/model_with_terms_gpu")
 
 
 if __name__ == "__main__":

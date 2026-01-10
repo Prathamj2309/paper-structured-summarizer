@@ -1,6 +1,5 @@
 import json
 import torch
-from datasets import Dataset
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 import evaluate
 
@@ -13,13 +12,13 @@ OUTPUT_PATH = "results/metrics_with_terms_gpu.json"
 
 
 def main():
-    print("Loading validation data...")
-    data = load_dataset(
-        csv_path="data/raw/arxiv_data.csv",
-        sample_size=200  
-    )
+    print("Loading test data...")
 
-    dataset = Dataset.from_list(data)
+    _, test_dataset = load_dataset(
+        csv_path="data/raw/arxiv_data.csv",
+        sample_size=2000,   # sample from full dataset
+        test_size=0.1
+    )
 
     print("Loading model and tokenizer...")
     tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
@@ -32,7 +31,7 @@ def main():
     references = []
 
     print("Running evaluation...")
-    for sample in dataset:
+    for sample in test_dataset:
         prompt = sample["input_text"]
 
         inputs = tokenizer(
