@@ -12,7 +12,7 @@ def main():
     print("Loading dataset...")
     train_dataset, _ = load_dataset(
         csv_path="data/raw/arxiv_data.csv",
-        sample_size=10000,
+        sample_size=5000,
         test_size = 0.1  
     )
 
@@ -22,7 +22,7 @@ def main():
 
     train_loader = DataLoader(
         tokenized,
-        batch_size=2,
+        batch_size=4,
         shuffle=True
     )
 
