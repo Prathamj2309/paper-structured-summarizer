@@ -10,6 +10,7 @@ env/
 # Model artifacts
 result/model/
 result/model_with_terms/
+result/model_with_terms_gpu/
 
 # Notebooks
 .ipynb_checkpoints/
