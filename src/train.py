@@ -29,24 +29,27 @@ def main():
     print("Loading model...")
     model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME).to(DEVICE)
     optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5)
-
+    
+    ACCUM_STEPS = 4
     print("Starting training...")
     model.train()
-
+    optimizer.zero_grad()
     for epoch in range(3):
         total_loss = 0.0
 
-        for batch in train_loader:
+        for step, batch in enumerate(train_loader):
             batch = {k: v.to(DEVICE) for k, v in batch.items()}
 
             outputs = model(**batch)
             loss = outputs.loss
+            loss = loss/ACCUM_STEPS
 
-            optimizer.zero_grad()
             loss.backward()
-            optimizer.step()
 
             total_loss += loss.item()
+            if (step +1)%ACCUM_STEPS == 0 :
+                optimizer.step()
+                optimizer.zero_grad()
 
         avg_loss = total_loss / len(train_loader)
         print(f"Epoch {epoch+1} | Avg loss: {avg_loss:.4f}")
