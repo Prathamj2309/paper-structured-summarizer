@@ -55,8 +55,8 @@ def main():
         print(f"Epoch {epoch+1} | Avg loss: {avg_loss:.4f}")
 
     print("Saving model...")
-    model.save_pretrained("result/model_with_terms_split_t5_base")
-    print("Model saved to result/model_with_terms_split_t5_base")
+    model.save_pretrained("result/model_with_terms_split_t5_base_accum")
+    print("Model saved to result/model_with_terms_split_t5_base_accum")
 
 
 if __name__ == "__main__":

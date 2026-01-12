@@ -5,10 +5,10 @@ import evaluate
 
 from dataset import load_dataset
 
-MODEL_PATH = "result/model_with_terms_split_t5_base"
+MODEL_PATH = "result/model_with_terms_split_t5_base_accum"
 MODEL_NAME = "t5-base"
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-OUTPUT_PATH = "results/metrics_with_terms_split_t5_base.json"
+OUTPUT_PATH = "results/metrics_with_terms_split_t5_base_accum.json"
 
 
 def main():
