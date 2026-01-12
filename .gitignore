@@ -13,6 +13,7 @@ result/model_with_terms/
 result/model_with_terms_gpu/
 result/model_with_terms_split
 result/model_with_terms_split_t5_base
+result/model_with_terms_split_t5_base_accum
 
 # Notebooks
 .ipynb_checkpoints/
